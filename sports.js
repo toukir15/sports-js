@@ -1,32 +1,32 @@
 
 // get data by api 
 const searchAllData = () => {
-    const searchInputValue = document.getElementById('search__input').value;
-    // console.log(searchInputValue);
-    const URL = ` https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${searchInputValue}`
-    fetch(URL).then(res => res.json()).then(data => {
-        displaySearchData(data.player)
-    })
+  const searchInputValue = document.getElementById('search__input').value;
+  // console.log(searchInputValue);
+  const URL = ` https://www.thesportsdb.com/api/v1/json/3/searchplayers.php?p=${searchInputValue}`
+  fetch(URL).then(res => res.json()).then(data => {
+    displaySearchData(data.player)
+  })
 }
 
 // display data 
 const displaySearchData = players => {
 
-    // clear input 
-    const searchInputValue = document.getElementById('search__input')
-    searchInputValue.value = '';
+  // clear input 
+  const searchInputValue = document.getElementById('search__input')
+  searchInputValue.value = '';
 
-    // player container 
-    const playerContainer = document.getElementById('player__container');
-    playerContainer.innerText = '';
+  // player container 
+  const playerContainer = document.getElementById('player__container');
+  playerContainer.innerText = '';
 
-    // get single player and create html
-    players.forEach(player => {
-        // console.log(player.strPlayer);
-        const { strThumb, strPlayer, strNationality, idPlayer } = player;
-        const playerDiv = document.createElement('div')
-        playerDiv.classList.add('col-lg-6')
-        playerDiv.innerHTML = `
+  // get single player and create html
+  players.forEach(player => {
+    // console.log(player.strPlayer);
+    const { strThumb, strPlayer, strNationality, idPlayer } = player;
+    const playerDiv = document.createElement('div')
+    playerDiv.classList.add('col-lg-6')
+    playerDiv.innerHTML = `
         <div class="card my-3" style="width: 18rem;">
   <img src="${strThumb ? strThumb : 'https://picsum.photos/200'}" class="card-img-top" alt="...">
   <div class="card-body">
@@ -39,27 +39,35 @@ const displaySearchData = players => {
   </div>
 </div>
         `
-        playerContainer.appendChild(playerDiv)
-    })
+    playerContainer.appendChild(playerDiv)
+  })
 }
 
 
 // load player details
 const loadDetails = (id) => {
-    const URL = `https://www.thesportsdb.com/api/v1/json/3/lookupplayer.php?id=${id}
+  const URL = `https://www.thesportsdb.com/api/v1/json/3/lookupplayer.php?id=${id}
 `
-    fetch(URL).then(res => res.json()).then(data => displayDetails(data))
+  fetch(URL).then(res => res.json()).then(data => displayDetails(data))
 }
 
 // display details 
 const displayDetails = (singlePlayer) => {
-    console.log(singlePlayer.players[0]);
-    const { strDescriptionEN, strThumb } = singlePlayer.players[0];
-    const detailsContainer = document.getElementById('details__container');
-    detailsContainer.innerText = '';
-    const detailsDiv = document.createElement('div')
-    detailsDiv.innerHTML = `
-    <div class="card mb-3" style="max-width: 540px;">
+  const { strDescriptionEN, strThumb, strGender } = singlePlayer.players[0];
+
+  if (strGender === "Male") {
+    const maleImg = document.getElementById('male__img');
+    maleImg.classList.remove("d-none")
+  }
+  else {
+    const femaleImg = document.getElementById('female__img');
+    femaleImg.classList.remove('d-none')
+  }
+  const detailsContainer = document.getElementById('details__container');
+  detailsContainer.innerText = '';
+  const detailsDiv = document.createElement('div')
+  detailsDiv.innerHTML = `
+    <div class="card mb-3 mt-5" style="max-width: 540px;">
   <div class="row g-0">
     <div class="col-md-4">
       <img src="${strThumb ? strThumb : 'https://picsum.photos/200'}" class="img-fluid rounded-start" alt="...">
@@ -73,5 +81,5 @@ const displayDetails = (singlePlayer) => {
   </div>
 </div>
     `
-    detailsContainer.appendChild(detailsDiv)
+  detailsContainer.appendChild(detailsDiv)
 }
